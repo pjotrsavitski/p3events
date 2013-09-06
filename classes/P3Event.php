@@ -78,7 +78,9 @@ class P3Event {
     }
 
     public function save() {
-        // TODO Need to check fro duplicate events
+        if ($this->checkIsDuplicateEvent()) {
+            return false;
+        }
         try {
             global $CONFIG;
             $fields = array();
@@ -99,6 +101,17 @@ class P3Event {
             return insert_data(sprintf("INSERT INTO {$CONFIG->dbprefix}p3events_captured_events_log (%s) VALUES (%s)", implode(", ", $fields), implode(", ", $values)));
         } catch (Exception $e) {
             error_log($e->getMessage());
+        }
+        return false;
+    }
+
+    public function checkIsDuplicateEvent() {
+        global $CONFIG;
+        if (in_array($this->event_type, array('group_update', 'object_update'))) {
+            $object = get_data_row(sprintf("SELECT timestamp FROM {$CONFIG->dbprefix}p3events_captured_events_log WHERE actor_guid=%d AND event_type='%s' AND object_guid = %d AND timestamp=FROM_UNIXTIME(%s)", $this->actor_guid, $this->event_type, $this->object_guid, $this->timestamp));
+            if ($object && $object instanceof stdClass) {
+                return true;
+            }
         }
         return false;
     }
