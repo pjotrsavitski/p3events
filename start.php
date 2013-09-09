@@ -279,17 +279,40 @@ function p3events_log_system_shutdown($event, $type, $params) {
     $context = elgg_get_context();
     $uri = current_page_url();
 
+    // Setting context for bookmarks view case
+    // (context is popped in _page_handler)
+    if (empty($context)) {
+        if (substr_count($uri, "/bookmarks/view/")) {
+            $context = 'bookmarks';
+        }
+    }
+
     if (
         !empty($context)
         && !in_array($context, array('captcha', 'api', 'admin', 'ajax'))
         && elgg_is_logged_in()
     ) {
+        $pattern = "/\/((blog|bookmarks|file|pages|discussion)\/view|groups\/profile)\/([0-9]+)\//i";
         $loggedin = elgg_get_logged_in_user_entity();
         $p3event = new P3Event();
         $p3event->setActorGuid($loggedin->getGUID());
         $p3event->setViewContext($context);
         $p3event->setUri($uri);
         $p3event->setEventType('view');
+        // Capture object data in case one of the cases matches
+        if (preg_match($pattern, $uri, $matches) === 1)  {
+            $object = get_entity($matches[3]);
+            $p3event->setOwnerGuid($object->getOwnerEntity()->getGUID());
+            $p3event->setObjectGuid($object->getGUID());
+            $p3event->setObjectType($object->getType());
+            $p3event->setObjectSubtype($object->getSubtype());
+            $p3event->setObjectTitle(($object instanceof ElggGroup) ? $object->name : $object->title);
+            $container = $object->getContainerEntity();
+            if ($container instanceof ElggGroup) {
+                $p3event->setContainerGuid($container->getGUID());
+                $p3event->setContainerTitle($container->name);
+            }
+        }
         $p3event->save();
         unset($p3event);
     }
