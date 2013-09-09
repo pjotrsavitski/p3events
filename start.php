@@ -15,7 +15,6 @@ function p3events_init() {
     elgg_register_event_handler('leave', 'group', 'p3events_log_group_leave');
 
     // Annotation events
-    // TODO Check if using this makes sense: annotate, <entity type>
     elgg_register_event_handler('create', 'annotation', 'p3events_log_annotation_create');
     elgg_register_event_handler('update', 'annotation', 'p3events_log_annotation_update');
     elgg_register_event_handler('delete', 'annotation', 'p3events_log_annotation_delete');
@@ -135,65 +134,73 @@ function p3events_log_group_leave($event, $type, $params) {
 
 function p3events_log_annotation_create($event, $type, $params) {
     if ($params instanceof ElggAnnotation) {
-        $loggedin = elgg_get_logged_in_user_entity();
-        $creator = $params->getOwnerEntity();
-        $entity = $params->getEntity();
-        $p3event = new P3Event();
-        $p3event->setActorGuid($loggedin->getGUID());
-        $p3event->setOwnerGuid($creator->getGUID());
-        $p3event->setObjectGuid($entity->getGUID());
-        $p3event->setObjectType($entity->getType());
-        $p3event->setObjectSubtype($entity->getSubtype());
-        $p3event->setObjectTitle($entity->title);
-        $p3event->setUri($params->getURL());
-        $p3event->setEventType('annotation_create');
-        $p3event->save();
-        unset($loggedin);
-        unset($creator);
-        unset($entity);
+        if (in_array($params->getSubtype(), array('generic_comment', 'group_topic_post'))) {
+            $loggedin = elgg_get_logged_in_user_entity();
+            $creator = $params->getOwnerEntity();
+            $entity = $params->getEntity();
+            $p3event = new P3Event();
+            $p3event->setActorGuid($loggedin->getGUID());
+            $p3event->setOwnerGuid($creator->getGUID());
+            $p3event->setObjectGuid($params->id);
+            $p3event->setObjectType($params->getType());
+            $p3event->setObjectSubtype($params->getSubtype());
+            $p3event->setContainerGuid($entity->getGUID());
+            $p3event->setContainerTitle($entity->title);
+            $p3event->setUri($params->getURL());
+            $p3event->setEventType('annotation_create');
+            $p3event->save();
+            unset($loggedin);
+            unset($creator);
+            unset($entity);
+        }
     }
 }
 
 function p3events_log_annotation_update($event, $type, $params) {
     if ($params instanceof ElggAnnotation) {
-        $loggedin = elgg_get_logged_in_user_entity();
-        $creator = $params->getOwnerEntity();
-        $entity = $params->getEntity();
-        $p3event = new P3Event();
-        $p3event->setActorGuid($loggedin->getGUID());
-        $p3event->setOwnerGuid($creator->getGUID());
-        $p3event->setObjectGuid($entity->getGUID());
-        $p3event->setObjectType($entity->getType());
-        $p3event->setObjectSubtype($entity->getSubtype());
-        $p3event->setObjectTitle($entity->title);
-        $p3event->setUri($params->getURL());
-        $p3event->setEventType('annotation_update');
-        $p3event->save();
-        unset($loggedin);
-        unset($creator);
-        unset($entity);
+        if (in_array($params->getSubtype(), array('generic_comment', 'group_topic_post'))) {
+            $loggedin = elgg_get_logged_in_user_entity();
+            $creator = $params->getOwnerEntity();
+            $entity = $params->getEntity();
+            $p3event = new P3Event();
+            $p3event->setActorGuid($loggedin->getGUID());
+            $p3event->setOwnerGuid($creator->getGUID());
+            $p3event->setObjectGuid($params->id);
+            $p3event->setObjectType($params->getType());
+            $p3event->setObjectSubtype($params->getSubtype());
+            $p3event->setContainerGuid($entity->getGUID());
+            $p3event->setContainerTitle($entity->title);
+            $p3event->setUri($params->getURL());
+            $p3event->setEventType('annotation_update');
+            $p3event->save();
+            unset($loggedin);
+            unset($creator);
+            unset($entity);
+        }
     }
 }
 
-// XXX This is not called
 function p3events_log_annotation_delete($event, $type, $params) {
     if ($params instanceof ElggAnnotation) {
-        $loggedin = elgg_get_logged_in_user_entity();
-        $creator = $params->getOwnerEntity();
-        $entity = $params->getEntity();
-        $p3event = new P3Event();
-        $p3event->setActorGuid($loggedin->getGUID());
-        $p3event->setOwnerGuid($creator->getGUID());
-        $p3event->setObjectGuid($entity->getGUID());
-        $p3event->setObjectType($entity->getType());
-        $p3event->setObjectSubtype($entity->getSubtype());
-        $p3event->setObjectTitle($entity->title);
-        $p3event->setUri($params->getURL());
-        $p3event->setEventType('annotation_delete');
-        $p3event->save();
-        unset($loggedin);
-        unset($creator);
-        unset($entity);
+        if (in_array($params->getSubtype(), array('generic_comment', 'group_topic_post'))) {
+            $loggedin = elgg_get_logged_in_user_entity();
+            $creator = $params->getOwnerEntity();
+            $entity = $params->getEntity();
+            $p3event = new P3Event();
+            $p3event->setActorGuid($loggedin->getGUID());
+            $p3event->setOwnerGuid($creator->getGUID());
+            $p3event->setObjectGuid($params->id);
+            $p3event->setObjectType($params->getType());
+            $p3event->setObjectSubtype($params->getSubtype());
+            $p3event->setContainerGuid($entity->getGUID());
+            $p3event->setContainerTitle($entity->title);
+            $p3event->setUri($params->getURL());
+            $p3event->setEventType('annotation_delete');
+            $p3event->save();
+            unset($loggedin);
+            unset($creator);
+            unset($entity);
+        }
     }
 }
 
