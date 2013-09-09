@@ -17,7 +17,11 @@ function p3events_init() {
     // Annotation events
     elgg_register_event_handler('create', 'annotation', 'p3events_log_annotation_create');
     elgg_register_event_handler('update', 'annotation', 'p3events_log_annotation_update');
+    // Please note that we are using singular and plular forms.
+    // This is due to a problem within the core with wrong name.
+    // Currently the plural form is the one that is working.
     elgg_register_event_handler('delete', 'annotation', 'p3events_log_annotation_delete');
+    elgg_register_event_handler('delete', 'annotations', 'p3events_log_annotation_delete');
 
     // Object events
     elgg_register_event_handler('create', 'object', 'p3events_log_object_create');
