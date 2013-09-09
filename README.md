@@ -23,3 +23,24 @@ The data is general and is used for all logged events. Some event might populate
 * view_context (string) - current context
 * uri (string) - uri of logged event
 
+### Captured events
+A special check is used for group and object update events that are emitted multiple times.
+
+* user_login - user login event with data on user with actor data and URI
+* group_crate - group create event with actor, owner and object data and URI
+* group_update - group update event with actor, owner and object data and URI
+* group_delete - group delete event with actor, owner and objct data and URI
+* group_join - group join event with actor, owner and object data and URI
+* group_leave - group leave event with actor, owner and object data and URI
+* annotation_create - annotation create event with actor, owner, object data and URI. Annotated object data is added as container. Only generic_comment and group_topic_post types are considered.
+* annotation_update - annotation update event with actor, owner, object data and URI. Annotated obje
+ct data is added as container. Only generic_comment and group_topic_post types are considered.
+* annotation_delete - annotation delete event with actor, owner, object data and URI. Annotated obje
+ct data is added as container. Only generic_comment and group_topic_post types are considered.
+* object_create - object create event with actor, owner and object data with URI. Container data is populated with ElggGroup data in case group is set as container.
+* object_update - object update event with actor, owner and object data with URI. Container data is
+populated with ElggGroup data in case group is set as container.
+* object_delete - object delete event with actor, owner and object data with URI. Container data is
+populated with ElggGroup data in case group is set as container.
+* view - actor, context and URI data is saved. In case certain types of objects are viewed additional data is being captured if object can be found by id: owner, object and container (if ElggGroup is a container) data. The data captured in case: non-empty context, context not being part of excluded ones, user being loggedin.
+
