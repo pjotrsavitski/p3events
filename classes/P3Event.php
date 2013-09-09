@@ -73,7 +73,6 @@ class P3Event {
     }
 
     public function setUri($uri) {
-        // TODO This should be a bit better (probably should remove the portal address from the beginning)
         $this->uri = $uri;
     }
 
