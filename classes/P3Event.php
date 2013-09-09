@@ -26,6 +26,8 @@ class P3Event {
         $this->event_type = $event_type;
     }
 
+    // TODO Using setActor that takes ElggUser
+    // might be faster
     public function setActorGuid($actor_guid) {
         $this->actor_guid = $actor_guid;
         $actor = get_user($actor_guid);
@@ -51,6 +53,8 @@ class P3Event {
         $this->object_title = $object_title;
     }
     
+    // TODO Using setOwner that takes ElggUser
+    // might be faster
     public function setOwnerGuid($owner_guid) {
         $this->owner_guid = $owner_guid;
         $owner = get_user($owner_guid);
