@@ -1,5 +1,11 @@
 # p3events
 
+## Installation
+Required version of Elgg is 1.8.x.
+
+Place the plugin into ***mod/*** directory of Elgg install (the plugin directory name should be ***p3events***).
+Enable the plugin.
+
 ## Please DO NOT USE
 This plugin should capture data for some events and put it into a standalone database table. The data format is quite specific.
 
